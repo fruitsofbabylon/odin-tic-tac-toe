@@ -8,10 +8,7 @@ const gameBoard = (function() {
     }
 
     const isEmpty = function(row, column) {
-      if (board[row] && board[row][column] === emptySquare) {
-        return true;
-      }
-      return false;
+      return board[row] && board[row][column] === emptySquare;
     };
 
     const placeMarker = function(row, column, marker) {
@@ -37,6 +34,13 @@ const gameBoard = (function() {
       return board;
     };
 
+    const getSquare = function(row, column) {
+      if (board[row]) {
+        return board[row][column];
+      }
+      return undefined;
+    };
+
     const reset = function() {
       for (let i = 0; i < board.length; i++) {
         for (let j = 0; j < board[i].length; j++) {
@@ -47,7 +51,7 @@ const gameBoard = (function() {
 
     reset();
 
-    return {placeMarker, getBoard, isEmpty, isFull, reset};
+    return {placeMarker, getBoard, isEmpty, isFull, getSquare, reset};
 })();
 
 function Player(name, marker) {
@@ -57,19 +61,85 @@ function Player(name, marker) {
   };
 }
 
-function game() {
-  const board = gameBoard;
+const game = (function() {
   let activePlayer = 0;
+  let winner = null;
   const players = [
     Player('Player One', 'X'),
     Player('Player Two', 'O')
   ];
 
+  const winLines = [
+    [[0, 0], [0, 1], [0, 2]],   //rows
+    [[1, 0], [1, 1], [1, 2]],
+    [[2, 0], [2, 1], [2, 2]],
+    [[0, 0], [1, 0], [2, 0]],   //columns
+    [[0, 1], [1, 1], [2, 1]],
+    [[0, 2], [1, 2], [2, 2]],   
+    [[0, 0], [1, 1], [2, 2]],   //diagonals
+    [[0, 2], [1, 1], [2, 0]],
+  ];
+
   const roundInstructions = function() {
-      
+    console.log('New game. Player One starts. To move, call game.playRound(row, column).');
+  };
+
+  const winCheck = function() {
+    let line = [];
+    for (let i = 0; i < winLines.length; i++) {
+      for (let j = 0; j < winLines[i].length; j++) {
+        const currentSquare = gameBoard.getSquare(winLines[i][j][0], winLines[i][j][1]);
+        line.push(currentSquare);
+      }
+      if (line[0] === line[1] && line[1] === line[2] && !gameBoard.isEmpty(winLines[i][0][0], winLines[i][0][1])) {
+        return line[0];
+      }
+      line = [];
+    }
+    return null;
   };
 
   const switchPlayer = function() {
-    activePlayer = activePlayer == 0 ? 1 : 0;
+    activePlayer = activePlayer === 0 ? 1 : 0;
   };
-}
+
+  const playRound = function(row, column) {
+    if (winner !== null) {
+      return 'Game is over. To restart use game.restart()';
+    }
+
+    if (!gameBoard.placeMarker(row, column, players[activePlayer].marker)) {
+      return 'Square taken or does not exist. Try again.';
+    }
+
+    console.table(gameBoard.getBoard());
+
+    if (winCheck() !== null) {
+      winner = players[activePlayer].name;
+      return `Game is over, the winner is ${winner}. To restart use game.restart()`;
+    }
+    
+    if (gameBoard.isFull()) {
+      winner = 'tie';
+      return 'This is a tie. To restart use game.restart()';
+    }
+
+    switchPlayer();
+    return `${players[activePlayer].name}'s turn now. Call game.playRound(row, column).`;
+  };
+
+  const getWinner = function() {
+    return winner;
+  };
+
+  const restart = function() {
+    winner = null;
+    activePlayer = 0;
+    gameBoard.reset();
+    roundInstructions();
+  };
+
+  roundInstructions();
+
+  return {playRound, getWinner, restart};
+})();
