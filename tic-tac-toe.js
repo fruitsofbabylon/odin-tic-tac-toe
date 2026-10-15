@@ -143,3 +143,22 @@ const game = (function() {
 
   return {playRound, getWinner, restart};
 })();
+
+const displayController = (function() {
+  const render = function() {
+    const container = document.querySelector('#board');
+    container.textContent = '';
+    const board = gameBoard.getBoard();
+    for (let i = 0; i < board.length; i++) {
+      for (let j = 0; j < board[i].length; j++) {
+        const square = document.createElement('button');
+        square.textContent = board[i][j];
+        container.appendChild(square);
+      }
+    }
+  };
+
+  return {render};
+})();
+
+displayController.render();
