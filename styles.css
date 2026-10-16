@@ -20,6 +20,9 @@
 body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+
+  height: 100%;
+  display: grid;
 }
 
 img, picture, video, canvas, svg {
@@ -44,4 +47,19 @@ h1, h2, h3, h4, h5, h6 {
 
 #root, #__next {
   isolation: isolate;
+}
+
+#board {
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+button {
+  padding: 20px;
+}
+
+.taken {
+  cursor: not-allowed;
+  opacity: 0.5;
 }

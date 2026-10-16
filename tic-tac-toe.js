@@ -145,18 +145,33 @@ const game = (function() {
 })();
 
 const displayController = (function() {
+  const container = document.querySelector('#board');
+
   const render = function() {
-    const container = document.querySelector('#board');
     container.textContent = '';
     const board = gameBoard.getBoard();
     for (let i = 0; i < board.length; i++) {
       for (let j = 0; j < board[i].length; j++) {
         const square = document.createElement('button');
         square.textContent = board[i][j];
+        square.dataset.row = i;
+        square.dataset.column = j;
         container.appendChild(square);
+        if (!gameBoard.isEmpty(i, j)) {
+          square.classList.add('taken');
+        }
       }
     }
   };
+
+  container.addEventListener('click', function(e) {
+    const square = e.target.closest('button');
+    if (!square) return;
+    const row = Number(square.dataset.row);
+    const column = Number(square.dataset.column);
+    game.playRound(row, column);
+    render();
+  });
 
   return {render};
 })();
