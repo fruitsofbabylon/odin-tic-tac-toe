@@ -80,6 +80,11 @@ const game = (function() {
     [[0, 2], [1, 1], [2, 0]],
   ];
 
+  const setPlayers = function(nameOne, nameTwo) {
+    players[0] = Player(nameOne, 'X');
+    players[1] = Player(nameTwo, 'O');
+  };
+
   const roundInstructions = function() {
     console.log('New game. Player One starts. To move, call game.playRound(row, column).');
   };
@@ -139,13 +144,21 @@ const game = (function() {
     roundInstructions();
   };
 
+  const getActivePlayer = function() {
+    return players[activePlayer];
+  };
+
   roundInstructions();
 
-  return {playRound, getWinner, restart};
+  return {setPlayers, playRound, getWinner, getActivePlayer, restart};
 })();
 
 const displayController = (function() {
   const container = document.querySelector('#board');
+  const startButton = document.querySelector('#start');
+  const setup = document.querySelector('#setup');
+  const status = document.querySelector('#status');
+  let started = false;
 
   const render = function() {
     container.textContent = '';
@@ -157,10 +170,28 @@ const displayController = (function() {
         square.dataset.row = i;
         square.dataset.column = j;
         container.appendChild(square);
+
         if (!gameBoard.isEmpty(i, j)) {
           square.classList.add('taken');
         }
+
+        if (!started || game.getWinner() !== null) {
+          square.disabled = true;
+        }
       }
+    }
+  };
+
+  const updateStatus = function() {
+    const winner = game.getWinner(); 
+    if (winner === 'tie') {
+      status.textContent = `This is a tie. To restart the game fill in player's names and 'Start' the game.`;
+      setup.classList.remove('hidden');
+    } else if (winner !== null) {
+      status.textContent = `Game is over, the winner is ${winner}. To restart the game fill in player's names and 'Start' the game.`;
+      setup.classList.remove('hidden');
+    } else {
+      status.textContent = `${game.getActivePlayer().name}'s turn.`;
     }
   };
 
@@ -171,6 +202,27 @@ const displayController = (function() {
     const column = Number(square.dataset.column);
     game.playRound(row, column);
     render();
+    updateStatus();
+  });
+
+  startButton.addEventListener('click', function(e) {
+    let playerOneName = document.getElementById('player-one').value.trim();
+    let playerTwoName = document.getElementById('player-two').value.trim();
+
+    if (playerOneName === '') {
+      playerOneName = 'Player One';
+    }
+    
+    if (playerTwoName === '') {
+      playerTwoName = 'Player Two';
+    }
+
+    started = true;
+    game.setPlayers(playerOneName, playerTwoName);
+    setup.classList.add('hidden');
+    game.restart();
+    render();
+    updateStatus();
   });
 
   return {render};

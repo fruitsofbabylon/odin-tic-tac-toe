@@ -8,6 +8,28 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="board"></div>
+    <header>
+        <h1>Tic Tac Toe</h1>
+    </header>
+    <main>
+        <div id="setup">
+            <input id="player-one" type="text" placeholder="Player One">
+            <input id="player-two" type="text" placeholder="Player Two">
+            <button id="start">Start</button>
+        </div>
+        <p id="status" aria-live="polite">Fill in player's names and Start the game.</p>
+        <div id="board"></div>
+    </main>
+    <footer>
+        <p>Copyright &copy; 
+            <script>
+                document.write(new Date().getFullYear());
+            </script>
+             fruitsofbabylon
+        </p>
+        <a href="https://github.com/fruitsofbabylon">
+            <img src="github.png" alt="github logo and link">
+        </a>
+    </footer>
 </body>
 </html>
