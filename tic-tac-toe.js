@@ -205,7 +205,7 @@ const displayController = (function() {
     updateStatus();
   });
 
-  startButton.addEventListener('click', function(e) {
+  startButton.addEventListener('click', function() {
     let playerOneName = document.getElementById('player-one').value.trim();
     let playerTwoName = document.getElementById('player-two').value.trim();
 
