@@ -162,6 +162,7 @@ const displayController = (function() {
 
   const render = function() {
     container.textContent = '';
+    container.classList.toggle('locked', !started);
     const board = gameBoard.getBoard();
     for (let i = 0; i < board.length; i++) {
       for (let j = 0; j < board[i].length; j++) {
@@ -169,6 +170,7 @@ const displayController = (function() {
         square.textContent = board[i][j];
         square.dataset.row = i;
         square.dataset.column = j;
+        square.dataset.marker = board[i][j];
         container.appendChild(square);
 
         if (!gameBoard.isEmpty(i, j)) {
@@ -183,6 +185,7 @@ const displayController = (function() {
   };
 
   const updateStatus = function() {
+    status.classList.toggle('result', game.getWinner() !== null);
     const winner = game.getWinner(); 
     if (winner === 'tie') {
       status.textContent = `This is a tie. To restart the game fill in player's names and 'Start' the game.`;
