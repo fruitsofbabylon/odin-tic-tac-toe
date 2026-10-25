@@ -176,8 +176,17 @@ input::placeholder {
   cursor: not-allowed;
 }
 
+#board button:hover {
+  border: 0.025em solid var(--color-lavender);
+}
+
 #board .taken {
   cursor: not-allowed;
+}
+
+#board .taken:hover,
+#board button:disabled:hover {
+  border: none;
 }
 
 .hidden { 
