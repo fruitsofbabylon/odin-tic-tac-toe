@@ -6,15 +6,6 @@ A browser-based Tic Tac Toe game for two players, built with vanilla JavaScript,
 
 ![Screenshot of the game](screenshot.png)
 
-## Features
-
-- Two players, custom names, X always starts
-- Detects all eight winning lines and ties
-- Blocks moves on taken squares and on a finished game
-- Start/restart without reloading the page
-- Status line announcing the current turn and the result
-- Responsive layout, playable on mobile
-
 ## How it was built
 
 The game logic is completely separate from the interface. `gameBoard` and `game`
