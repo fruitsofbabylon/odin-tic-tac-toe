@@ -8,7 +8,7 @@ const gameBoard = (function() {
     }
 
     const isEmpty = function(row, column) {
-      return board[row] && board[row][column] === emptySquare;
+      return board[row] !== undefined && board[row][column] === emptySquare;
     };
 
     const placeMarker = function(row, column, marker) {
@@ -86,7 +86,7 @@ const game = (function() {
   };
 
   const roundInstructions = function() {
-    console.log('New game. Player One starts. To move, call game.playRound(row, column).');
+    console.log(`New game. ${players[0].name} starts. To move, call game.playRound(row, column).`);
   };
 
   const winCheck = function() {
@@ -116,8 +116,6 @@ const game = (function() {
     if (!gameBoard.placeMarker(row, column, players[activePlayer].marker)) {
       return 'Square taken or does not exist. Try again.';
     }
-
-    console.table(gameBoard.getBoard());
 
     if (winCheck() !== null) {
       winner = players[activePlayer].name;
@@ -158,6 +156,8 @@ const displayController = (function() {
   const startButton = document.querySelector('#start');
   const setup = document.querySelector('#setup');
   const status = document.querySelector('#status');
+  let playerOneName = document.getElementById('player-one').value.trim();
+  let playerTwoName = document.getElementById('player-two').value.trim();
   let started = false;
 
   const render = function() {
@@ -167,10 +167,12 @@ const displayController = (function() {
     for (let i = 0; i < board.length; i++) {
       for (let j = 0; j < board[i].length; j++) {
         const square = document.createElement('button');
+        const marker = gameBoard.isEmpty(i, j) ? 'empty' : board[i][j];
         square.textContent = board[i][j];
         square.dataset.row = i;
         square.dataset.column = j;
         square.dataset.marker = board[i][j];
+        square.setAttribute('aria-label', `Row ${i + 1}, column ${j + 1}, ${marker}`);
         container.appendChild(square);
 
         if (!gameBoard.isEmpty(i, j)) {
@@ -185,8 +187,8 @@ const displayController = (function() {
   };
 
   const updateStatus = function() {
-    status.classList.toggle('result', game.getWinner() !== null);
-    const winner = game.getWinner(); 
+    const winner = game.getWinner();
+    status.classList.toggle('result', winner !== null);
     if (winner === 'tie') {
       status.textContent = `This is a tie. To restart the game fill in player's names and 'Start' the game.`;
       setup.classList.remove('hidden');
@@ -209,9 +211,6 @@ const displayController = (function() {
   });
 
   startButton.addEventListener('click', function() {
-    let playerOneName = document.getElementById('player-one').value.trim();
-    let playerTwoName = document.getElementById('player-two').value.trim();
-
     if (playerOneName === '') {
       playerOneName = 'Player One';
     }
@@ -232,3 +231,4 @@ const displayController = (function() {
 })();
 
 displayController.render();
+document.querySelector('#year').textContent = new Date().getFullYear();
