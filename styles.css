@@ -28,12 +28,14 @@ body {
   --color-base: #322233;
   --color-dark: #241926;
 
-  height: 100vh;
+  min-height: 100dvh; 
   font-size: 1rem;
   display: grid;
-  grid-template-rows: 1fr 4fr max-content;
+  grid-template-rows: auto 1fr auto;
   background-color: var(--color-base);
   font-family: "Jost", sans-serif;
+  padding: 1em;
+  gap: 1em;
 }
 
 img, picture, video, canvas, svg {
@@ -73,6 +75,7 @@ header {
 h1 {
   margin: auto;
   font-size: 2.25em;
+  margin: 1em 0;
 }
 
 h1::after {
@@ -144,7 +147,7 @@ input::placeholder {
   margin: auto;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  width: min(90vw, 420px);
+  width: min(100%, 420px);
   gap: 0.5em;
   padding: 0.5em;
   background-color: var(--color-dark);
@@ -210,4 +213,14 @@ footer p {
 footer img {
   height: 2em;
   filter: invert(90%) sepia(34%) saturate(123%) hue-rotate(33deg) brightness(102%) contrast(94%);
+}
+
+@media (max-width: 30em) {
+  h1 {
+    margin: 0.5em 0;
+  }
+
+  #setup {
+    grid-template-columns: 1fr;
+  }
 }
